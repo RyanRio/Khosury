@@ -89,4 +89,4 @@ there is a triangle spawner
 * void spawner.killTri(id)
 
 # constants
-* beatmap space: (0,0) (16, 9) where (0,0) is bottom left
+* beatmap space: (0,0) to (16, 9) where (0,0) is bottom left
