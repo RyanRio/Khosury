@@ -105,14 +105,21 @@ public class Spawner : MonoBehaviour
 
     public void spawnClick(Vector2 pos, int id)
     {
-        GameObject click = this.spawn(this.clickQueue, pos, id);
-        clickCurrentlyVisible.Add(id, click);
+        if(!clickCurrentlyVisible.ContainsKey(id))
+        {
+            GameObject click = this.spawn(this.clickQueue, pos, id);
+            clickCurrentlyVisible.Add(id, click);
+        }
     }
 
     public void spawnSlider(Vector2 pos, int id)
     {
-        GameObject slider = this.spawn(this.sliderQueue, pos, id);
-        sliderCurrentlyVisible.Add(id, slider);
+        if(!sliderCurrentlyVisible.ContainsKey(id))
+        {
+            GameObject slider = this.spawn(this.sliderQueue, pos, id);
+            sliderCurrentlyVisible.Add(id, slider);
+        }
+
     }
 
 
