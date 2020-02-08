@@ -33,7 +33,6 @@
     * circle radius
     * approach rate
     * health drain speed
-    * time tolerance window
     * some kind of time tolerance for sliders
         * you can start it late
         * you can end it a bit off
@@ -87,3 +86,6 @@ there is a triangle spawner
 * void spawner.spawnTriangle(pos, id)
     * needs to set triangle.id !!!
 * void spawner.killTri(id)
+
+# constants
+* beatmap space: (0,0) to (16, 9) where (0,0) is bottom left
