@@ -26,6 +26,15 @@ public class Spawner : MonoBehaviour
     #region Singleton
     public static Spawner Instance { get { return _instance; } }
 
+    public void init(float radius, float approach)
+    {
+        clickQueue = new Queue<GameObject>();
+        sliderQueue = new Queue<GameObject>();
+        initQueue(clickQueue, click.maxObjects, click.gameObject, radius, approach);
+        initQueue(sliderQueue, click.maxObjects, slider.gameObject, radius, approach);
+        sliderCurrentlyVisible = new Dictionary<int, GameObject>();
+        clickCurrentlyVisible = new Dictionary<int, GameObject>();
+    }
 
     private void Awake()
     {
@@ -41,24 +50,22 @@ public class Spawner : MonoBehaviour
     #endregion Singleton
 
     #region private
-    private void Start()
-    {
-        clickQueue = new Queue<GameObject>();
-        sliderQueue = new Queue<GameObject>();
-        initQueue(clickQueue, click.maxObjects, click.gameObject);
-        initQueue(sliderQueue, click.maxObjects, slider.gameObject);
-        sliderCurrentlyVisible = new Dictionary<int, GameObject>();
-        clickCurrentlyVisible = new Dictionary<int, GameObject>();
-        Debug.Log("click exists");
-    }
 
-    private void initQueue(Queue<GameObject> queue, int max, GameObject prefab)
+
+    private void initQueue(Queue<GameObject> queue, int max, GameObject prefab, float radius, float approach)
     {
 
         for (int i = 0; i < max; i++)
         {
             GameObject obj = Instantiate(prefab, transform);
-            obj.SetActive(false);
+            obj.transform.localScale = new Vector3(radius, radius);
+            onEnable objAnim = obj.GetComponentInChildren<onEnable>();
+            if (objAnim != null)
+            {
+
+                obj.SetActive(false);
+                objAnim.setSpeed(1.0f / approach);
+            }
             queue.Enqueue(obj);
         }
     }
@@ -66,7 +73,6 @@ public class Spawner : MonoBehaviour
 
     private GameObject spawn(Queue<GameObject> from, Vector2 pos, int id)
     {
-
         GameObject toSpawn = from.Dequeue();
 
         toSpawn.SetActive(true);

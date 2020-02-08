@@ -5,6 +5,7 @@ using System.Linq;
 
 public class Map : MonoBehaviour
 {
+
     List<Click> clicks;
     List<Slider> sliders;
     public string beatmapPath;
@@ -46,6 +47,8 @@ public class Map : MonoBehaviour
         tolerance = 0.005f * approach;
         SCREEN_HEIGHT = Camera.main.orthographicSize * 2;
         SCREEN_WIDTH = SCREEN_HEIGHT * Screen.width / Screen.height;
+
+        Spawner.Instance.init(radius, approach);
     }
 
     // Update is called once per frame
@@ -81,8 +84,7 @@ public class Map : MonoBehaviour
         foreach (Click c in visi)
         {
             float dsq = Vector2.SqrMagnitude(new Vector2(c.x, c.y) - pos);
-            Debug.Log("distance from click: " + Mathf.Sqrt(dsq));
-            if (dsq <= (0.3 * 0.3))
+            if (dsq <= (radius * radius))
             {
                 Spawner.Instance.deleteClick(c.GetHashCode());
                 this.clicks.Remove(c);
