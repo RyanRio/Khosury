@@ -49,6 +49,7 @@ public class Spawner : MonoBehaviour
         initQueue(sliderQueue, click.maxObjects, slider.gameObject);
         sliderCurrentlyVisible = new Dictionary<int, GameObject>();
         clickCurrentlyVisible = new Dictionary<int, GameObject>();
+        Debug.Log("click exists");
     }
 
     private void initQueue(Queue<GameObject> queue, int max, GameObject prefab)
@@ -83,7 +84,7 @@ public class Spawner : MonoBehaviour
     {
         GameObject obj;
         dict.TryGetValue(id, out obj);
-        if(obj != null)
+        if (obj != null)
         {
             obj.SetActive(false);
             dict.Remove(id);
@@ -105,7 +106,8 @@ public class Spawner : MonoBehaviour
 
     public void spawnClick(Vector2 pos, int id)
     {
-        if(!clickCurrentlyVisible.ContainsKey(id))
+        Debug.Log("spawning click");
+        if (!clickCurrentlyVisible.ContainsKey(id))
         {
             GameObject click = this.spawn(this.clickQueue, pos, id);
             clickCurrentlyVisible.Add(id, click);
@@ -114,7 +116,7 @@ public class Spawner : MonoBehaviour
 
     public void spawnSlider(Vector2 pos, int id)
     {
-        if(!sliderCurrentlyVisible.ContainsKey(id))
+        if (!sliderCurrentlyVisible.ContainsKey(id))
         {
             GameObject slider = this.spawn(this.sliderQueue, pos, id);
             sliderCurrentlyVisible.Add(id, slider);
