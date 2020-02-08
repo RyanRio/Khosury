@@ -96,19 +96,22 @@ public class Spawner : MonoBehaviour
 
     public void deleteClick(int id)
     {
+        Debug.Log("deleting click with id: " + id);
         this.delete(id, clickCurrentlyVisible);
     }
 
     public void deleteSlider(int id)
     {
+        Debug.Log("deleting slider with id: " + id);
         this.delete(id, sliderCurrentlyVisible);
     }
 
     public void spawnClick(Vector2 pos, int id)
     {
-        Debug.Log("spawning click");
+
         if (!clickCurrentlyVisible.ContainsKey(id))
         {
+            Debug.Log("spawning new click with id: " + id);
             GameObject click = this.spawn(this.clickQueue, pos, id);
             clickCurrentlyVisible.Add(id, click);
         }
@@ -118,6 +121,7 @@ public class Spawner : MonoBehaviour
     {
         if (!sliderCurrentlyVisible.ContainsKey(id))
         {
+            Debug.Log("spawning new slider with id: " + id);
             GameObject slider = this.spawn(this.sliderQueue, pos, id);
             sliderCurrentlyVisible.Add(id, slider);
         }

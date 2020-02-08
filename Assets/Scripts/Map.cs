@@ -35,6 +35,16 @@ public class Map : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        List<Click> cToRemove = clicks.Where(c => isTooOld(c)).ToList();
+        List<Slider> sToRemove = sliders.Where(s => isTooOld(s)).ToList();
+        foreach (Click c in cToRemove)
+        {
+            Spawner.Instance.deleteClick(c.GetHashCode());
+        }
+        foreach (Slider s in sToRemove)
+        {
+            Spawner.Instance.deleteSlider(s.GetHashCode());
+        }
         clicks = clicks.Where(c => !isTooOld(c)).ToList();
         sliders = sliders.Where(s => !isTooOld(s)).ToList();
         foreach (Click c in visibleClicks())
@@ -54,10 +64,10 @@ public class Map : MonoBehaviour
         foreach (Click c in clicks)
         {
             float dsq = Vector2.SqrMagnitude(new Vector2(c.x, c.y) - pos);
-            if (dsq <= radius * radius && Mathf.Abs(Time.time / 1000f - c.time) <= 2 * tolerance)
+            if (dsq <= radius * radius && Mathf.Abs(Time.time - c.time) <= 2 * tolerance)
             {
                 // todo notify success of c
-            } 
+            }
             else
             {
                 // todo notify fail of c
@@ -69,22 +79,22 @@ public class Map : MonoBehaviour
 
     bool isVisible(Click c)
     {
-        return Time.time / 1000f >= c.time - approach && Time.time / 1000f <= c.time + tolerance;
+        return Time.time >= c.time - approach && Time.time <= c.time + tolerance;
     }
 
     bool isVisible(Slider s)
     {
-        return Time.time / 1000f >= s.startTime - approach && Time.time / 1000f <= s.endTime + tolerance;
+        return Time.time >= s.startTime - approach && Time.time <= s.endTime + tolerance;
     }
 
     bool isTooOld(Click c)
     {
-        return Time.time / 1000f > c.time + tolerance;
+        return Time.time > c.time + tolerance;
     }
 
     bool isTooOld(Slider s)
     {
-        return Time.time / 1000f > s.endTime + tolerance;
+        return Time.time > s.endTime + tolerance;
     }
 
     List<Click> visibleClicks()
@@ -99,7 +109,7 @@ public class Map : MonoBehaviour
 
     Vector2 toBeatmapCoords(Vector2 pos)
     {
-        
+
         float x = pos.x * 16f / SCREEN_WIDTH + 8f;
         float y = pos.y * 9f / SCREEN_HEIGHT + 4.5f;
         return new Vector2(x, y);

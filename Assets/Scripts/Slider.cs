@@ -5,10 +5,10 @@ using UnityEngine;
 [System.Serializable]
 public class Slider
 {
-    public readonly float x1, x2;
-    public readonly float y1, y2;
-    public readonly float startTime;
-    public readonly float endTime;
+    public float x1, x2;
+    public float y1, y2;
+    public float startTime;
+    public float endTime;
 
     public Slider(float x1, float y1, float x2, float y2, float startTime, float endTime)
     {

@@ -23,6 +23,7 @@ public class BeatmapReader
         this.notes = map.notes;
         Debug.Log(map.notes.Count);
         Debug.Log(map.radius);
+        Debug.Log("c time: " + map.notes[0].time);
         this.sliders = map.sliders;
         this.approach = map.approach;
         this.drain = map.drain;
