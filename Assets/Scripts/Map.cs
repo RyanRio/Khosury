@@ -45,19 +45,16 @@ public class Map : MonoBehaviour
         foreach (Click c in clicks)
         {
             float dsq = Vector2.SqrMagnitude(new Vector2(c.x, c.y) - pos);
-            if (dsq <= radius * radius)
+            if (dsq <= radius * radius && Mathf.Abs(Time.time / 1000f - c.time) <= 2 * tolerance)
             {
-                if (Mathf.Abs(Time.time / 1000f - c.time) <= 2 * tolerance)
-                {
-                    // todo notify success of c
-                    break;
-                }
+                // todo notify success of c
             } 
             else
             {
                 // todo notify fail of c
-                break;
             }
+            Spawner.Instance.deleteClick(c.GetHashCode());
+            break;
         }
     }
 
