@@ -37,6 +37,15 @@ public class Map : MonoBehaviour
     {
         clicks = clicks.Where(c => !isTooOld(c)).ToList();
         sliders = sliders.Where(s => !isTooOld(s)).ToList();
+        foreach (Click c in visibleClicks())
+        {
+            Spawner.Instance.spawnClick(toUnityCoords(new Vector2(c.x, c.y)), c.GetHashCode());
+        }
+        foreach (Slider s in visibleSliders())
+        {
+            // sliders 2 pos in future
+            Spawner.Instance.spawnSlider(toUnityCoords(new Vector2(s.x1, s.y1)), s.GetHashCode());
+        }
     }
 
     void handleClick(Vector2 pos)
