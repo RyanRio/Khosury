@@ -33,7 +33,6 @@
     * circle radius
     * approach rate
     * health drain speed
-    * time tolerance window
     * some kind of time tolerance for sliders
         * you can start it late
         * you can end it a bit off
