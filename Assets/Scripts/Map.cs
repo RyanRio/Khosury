@@ -14,8 +14,8 @@ public class Map : MonoBehaviour
     float drain;
     float tolerance;
 
-    static float SCREEN_HEIGHT = Camera.main.orthographicSize * 2;
-    static float SCREEN_WIDTH = SCREEN_HEIGHT * Screen.width / Screen.height;
+    float SCREEN_HEIGHT;
+    float SCREEN_WIDTH;
 
 
     // Start is called before the first frame update
@@ -28,6 +28,8 @@ public class Map : MonoBehaviour
         approach = reader.getApproach();
         drain = reader.getDrain();
         tolerance = 0.005f * approach;
+        SCREEN_HEIGHT = Camera.main.orthographicSize * 2;
+        SCREEN_WIDTH = SCREEN_HEIGHT * Screen.width / Screen.height;
     }
 
     // Update is called once per frame
