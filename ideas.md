@@ -89,3 +89,4 @@ there is a triangle spawner
 
 # constants
 * beatmap space: (0,0) to (16, 9) where (0,0) is bottom left
+* approach rate is measured in seconds
