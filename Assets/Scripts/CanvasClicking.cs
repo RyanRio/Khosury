@@ -13,6 +13,12 @@ public class CanvasClicking : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        
+        if (Input.GetMouseButtonUp(0))
+        {
+            Debug.Log("pressed" + Input.mousePosition.y + " " + Input.mousePosition.x);
+            //Converting Mouse Pos to 2D (vector2) World Pos
+            Vector2 rayPos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
+
+        }
     }
 }
