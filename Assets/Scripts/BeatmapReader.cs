@@ -19,7 +19,6 @@ public class BeatmapReader
     {
         string path = beatmap_path + beatmap_name;
         StreamReader reader = new StreamReader(path);
-
         BeatmapReader map = JsonUtility.FromJson<BeatmapReader>(reader.ReadToEnd());
         this.clicks = map.clicks;
         this.sliders = map.sliders;
