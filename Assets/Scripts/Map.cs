@@ -17,6 +17,22 @@ public class Map : MonoBehaviour
     float SCREEN_HEIGHT;
     float SCREEN_WIDTH;
 
+    private static Map _instance;
+    public static Map Instance { get { return _instance; } }
+
+
+    private void Awake()
+    {
+        if (_instance != null && _instance != this)
+        {
+            Destroy(this.gameObject);
+        }
+        else
+        {
+            _instance = this;
+        }
+    }
+
 
     // Start is called before the first frame update
     void Start()
@@ -58,23 +74,26 @@ public class Map : MonoBehaviour
         }
     }
 
-    void handleClick(Vector2 pos)
+    public void handleClick(Vector2 pos)
     {
-        // todo sliders
-        foreach (Click c in clicks)
+        List<Click> visi = visibleClicks();
+
+        foreach (Click c in visi)
         {
             float dsq = Vector2.SqrMagnitude(new Vector2(c.x, c.y) - pos);
-            if (dsq <= radius * radius && Mathf.Abs(Time.time - c.time) <= 2 * tolerance)
+            Debug.Log("distance from click: " + Mathf.Sqrt(dsq));
+            if (dsq <= (0.3 * 0.3))
             {
-                // todo notify success of c
+                Spawner.Instance.deleteClick(c.GetHashCode());
+                this.clicks.Remove(c);
             }
             else
             {
-                // todo notify fail of c
+                Debug.Log("failed");
             }
-            Spawner.Instance.deleteClick(c.GetHashCode());
-            break;
+            // Spawner.Instance.deleteClick(c.GetHashCode());
         }
+
     }
 
     bool isVisible(Click c)
