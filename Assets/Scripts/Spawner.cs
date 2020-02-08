@@ -47,6 +47,8 @@ public class Spawner : MonoBehaviour
         sliderQueue = new Queue<GameObject>();
         initQueue(clickQueue, click.maxObjects, click.gameObject);
         initQueue(sliderQueue, click.maxObjects, slider.gameObject);
+        sliderCurrentlyVisible = new Dictionary<int, GameObject>();
+        clickCurrentlyVisible = new Dictionary<int, GameObject>();
     }
 
     private void initQueue(Queue<GameObject> queue, int max, GameObject prefab)

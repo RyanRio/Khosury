@@ -13,8 +13,8 @@ public class Map : MonoBehaviour
     float drain;
     float tolerance;
 
-    float SCREEN_HEIGHT = Camera.main.orthographicSize * 2;
-    float SCREEN_WIDTH = screenHeight * Screen.width / Screen.height;
+    static float SCREEN_HEIGHT = Camera.main.orthographicSize * 2;
+    static float SCREEN_WIDTH = SCREEN_HEIGHT * Screen.width / Screen.height;
 
 
     // Start is called before the first frame update
