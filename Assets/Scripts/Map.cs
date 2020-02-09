@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using System.Linq;
+using UnityEngine.SceneManagement;
 
 public class Map : MonoBehaviour
 {
@@ -49,6 +50,7 @@ public class Map : MonoBehaviour
         SCREEN_WIDTH = SCREEN_HEIGHT * Screen.width / Screen.height;
 
         Spawner.Instance.init(radius, approach);
+        // HealthManager.Instance.notifyDead(die);
     }
 
     // Update is called once per frame
@@ -75,6 +77,13 @@ public class Map : MonoBehaviour
             // sliders 2 pos in future
             Spawner.Instance.spawnSlider(toUnityCoords(new Vector2(s.x1, s.y1)), s.GetHashCode());
         }
+        
+    }
+
+    void die()
+    {
+        print("oof i died");
+        SceneManager.LoadScene("OOF_I_DIED");
     }
 
     public void handleClick(Vector2 pos)
@@ -86,6 +95,7 @@ public class Map : MonoBehaviour
             float dsq = Vector2.SqrMagnitude(new Vector2(c.x, c.y) - pos);
             if (dsq <= (radius * radius))
             {
+                this.updateScore(c);
                 Spawner.Instance.deleteClick(c.GetHashCode());
                 this.clicks.Remove(c);
             }
@@ -95,6 +105,22 @@ public class Map : MonoBehaviour
             }
             // Spawner.Instance.deleteClick(c.GetHashCode());
         }
+
+    }
+
+    // updates the score based on the players gamer skill
+    private void updateScore(Click c)
+    {
+        float beginTime = c.time - approach;
+        float curTime = Time.time;
+        if (Time.time > c.time)
+        {
+            curTime = c.time;
+        }
+        float score = AnimationCurve.EaseInOut(c.time - approach, 0, c.time, 1000).Evaluate(curTime);
+        int rounded = Mathf.RoundToInt(score);
+        scoreboardScript.Instance.updateScore(rounded);
+        HealthManager.Instance.score(rounded);
 
     }
 

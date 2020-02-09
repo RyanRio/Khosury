@@ -106,6 +106,7 @@ public class Spawner : MonoBehaviour
         this.delete(id, clickCurrentlyVisible);
     }
 
+    [System.Obsolete]
     public void deleteSlider(int id)
     {
         Debug.Log("deleting slider with id: " + id);
@@ -123,6 +124,7 @@ public class Spawner : MonoBehaviour
         }
     }
 
+    [System.Obsolete]
     public void spawnSlider(Vector2 pos, int id)
     {
         if (!sliderCurrentlyVisible.ContainsKey(id))

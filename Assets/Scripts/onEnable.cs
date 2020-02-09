@@ -27,9 +27,5 @@ public class onEnable : MonoBehaviour
         anim.SetFloat("mult", speed);
 
         Debug.Log("new mult: " + anim.GetFloat("mult"));
-
-        Debug.Log("prev bool: " + anim.GetBool("asd"));
-        anim.SetBool(Animator.StringToHash("asd"), true);
-        Debug.Log("bool: " + anim.GetBool(Animator.StringToHash("asd")));
     }
 }
