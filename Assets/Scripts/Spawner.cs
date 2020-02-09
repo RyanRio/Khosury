@@ -26,6 +26,15 @@ public class Spawner : MonoBehaviour
     #region Singleton
     public static Spawner Instance { get { return _instance; } }
 
+    public void init(float radius, float approach)
+    {
+        clickQueue = new Queue<GameObject>();
+        sliderQueue = new Queue<GameObject>();
+        initQueue(clickQueue, click.maxObjects, click.gameObject, radius, approach);
+        initQueue(sliderQueue, click.maxObjects, slider.gameObject, radius, approach);
+        sliderCurrentlyVisible = new Dictionary<int, GameObject>();
+        clickCurrentlyVisible = new Dictionary<int, GameObject>();
+    }
 
     private void Awake()
     {
@@ -41,23 +50,22 @@ public class Spawner : MonoBehaviour
     #endregion Singleton
 
     #region private
-    private void Start()
-    {
-        clickQueue = new Queue<GameObject>();
-        sliderQueue = new Queue<GameObject>();
-        initQueue(clickQueue, click.maxObjects, click.gameObject);
-        initQueue(sliderQueue, click.maxObjects, slider.gameObject);
-        sliderCurrentlyVisible = new Dictionary<int, GameObject>();
-        clickCurrentlyVisible = new Dictionary<int, GameObject>();
-    }
 
-    private void initQueue(Queue<GameObject> queue, int max, GameObject prefab)
+
+    private void initQueue(Queue<GameObject> queue, int max, GameObject prefab, float radius, float approach)
     {
 
         for (int i = 0; i < max; i++)
         {
             GameObject obj = Instantiate(prefab, transform);
-            obj.SetActive(false);
+            obj.transform.localScale = new Vector3(radius, radius);
+            onEnable objAnim = obj.GetComponentInChildren<onEnable>();
+            if (objAnim != null)
+            {
+
+                obj.SetActive(false);
+                objAnim.setSpeed(1.0f / approach);
+            }
             queue.Enqueue(obj);
         }
     }
@@ -65,7 +73,6 @@ public class Spawner : MonoBehaviour
 
     private GameObject spawn(Queue<GameObject> from, Vector2 pos, int id)
     {
-
         GameObject toSpawn = from.Dequeue();
 
         toSpawn.SetActive(true);
@@ -83,7 +90,7 @@ public class Spawner : MonoBehaviour
     {
         GameObject obj;
         dict.TryGetValue(id, out obj);
-        if(obj != null)
+        if (obj != null)
         {
             obj.SetActive(false);
             dict.Remove(id);
@@ -95,24 +102,36 @@ public class Spawner : MonoBehaviour
 
     public void deleteClick(int id)
     {
+        Debug.Log("deleting click with id: " + id);
         this.delete(id, clickCurrentlyVisible);
     }
 
     public void deleteSlider(int id)
     {
+        Debug.Log("deleting slider with id: " + id);
         this.delete(id, sliderCurrentlyVisible);
     }
 
     public void spawnClick(Vector2 pos, int id)
     {
-        GameObject click = this.spawn(this.clickQueue, pos, id);
-        clickCurrentlyVisible.Add(id, click);
+
+        if (!clickCurrentlyVisible.ContainsKey(id))
+        {
+            Debug.Log("spawning new click with id: " + id);
+            GameObject click = this.spawn(this.clickQueue, pos, id);
+            clickCurrentlyVisible.Add(id, click);
+        }
     }
 
     public void spawnSlider(Vector2 pos, int id)
     {
-        GameObject slider = this.spawn(this.sliderQueue, pos, id);
-        sliderCurrentlyVisible.Add(id, slider);
+        if (!sliderCurrentlyVisible.ContainsKey(id))
+        {
+            Debug.Log("spawning new slider with id: " + id);
+            GameObject slider = this.spawn(this.sliderQueue, pos, id);
+            sliderCurrentlyVisible.Add(id, slider);
+        }
+
     }
 
 

@@ -4,10 +4,11 @@ using UnityEngine;
 
 public class CanvasClicking : MonoBehaviour
 {
+
     // Start is called before the first frame update
     void Start()
     {
-        
+
     }
 
     // Update is called once per frame
@@ -15,10 +16,10 @@ public class CanvasClicking : MonoBehaviour
     {
         if (Input.GetMouseButtonUp(0))
         {
-            Debug.Log("pressed" + Input.mousePosition.y + " " + Input.mousePosition.x);
-            //Converting Mouse Pos to 2D (vector2) World Pos
-            Vector2 rayPos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
-
+            Vector2 pos = Camera.main.ScreenToViewportPoint(Input.mousePosition);
+            float newx = Mathf.Lerp(0, 16, pos.x);
+            float newy = Mathf.Lerp(0, 9, pos.y);
+            Map.Instance.handleClick(new Vector2(newx, newy));
         }
     }
 }

@@ -8,20 +8,22 @@ public class BeatmapReader
 {
     public string beatmap_path = "Assets/Beatmaps/";
 
-    private List<Click> clicks;
-    private List<Slider> sliders;
-    private float approach;
-    private float drain = 0;
-    private float radius;
+    public List<Click> notes;
+    public List<Slider> sliders;
+    public float approach;
+    public float drain = 0;
+    public float radius;
 
 
     public void read(string beatmap_name)
     {
         string path = beatmap_path + beatmap_name;
         StreamReader reader = new StreamReader(path);
-
         BeatmapReader map = JsonUtility.FromJson<BeatmapReader>(reader.ReadToEnd());
-        this.clicks = map.clicks;
+        this.notes = map.notes;
+        Debug.Log(map.notes.Count);
+        Debug.Log(map.radius);
+        Debug.Log("c time: " + map.notes[0].time);
         this.sliders = map.sliders;
         this.approach = map.approach;
         this.drain = map.drain;
@@ -30,7 +32,7 @@ public class BeatmapReader
 
     public List<Click> getClicks()
     {
-        return clicks;
+        return notes;
     }
 
     public List<Slider> getSliders()

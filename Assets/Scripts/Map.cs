@@ -5,6 +5,7 @@ using System.Linq;
 
 public class Map : MonoBehaviour
 {
+
     List<Click> clicks;
     List<Slider> sliders;
     public string beatmapPath;
@@ -16,6 +17,22 @@ public class Map : MonoBehaviour
 
     float SCREEN_HEIGHT;
     float SCREEN_WIDTH;
+
+    private static Map _instance;
+    public static Map Instance { get { return _instance; } }
+
+
+    private void Awake()
+    {
+        if (_instance != null && _instance != this)
+        {
+            Destroy(this.gameObject);
+        }
+        else
+        {
+            _instance = this;
+        }
+    }
 
 
     // Start is called before the first frame update
@@ -30,52 +47,75 @@ public class Map : MonoBehaviour
         tolerance = 0.005f * approach;
         SCREEN_HEIGHT = Camera.main.orthographicSize * 2;
         SCREEN_WIDTH = SCREEN_HEIGHT * Screen.width / Screen.height;
+
+        Spawner.Instance.init(radius, approach);
     }
 
     // Update is called once per frame
     void Update()
     {
+        List<Click> cToRemove = clicks.Where(c => isTooOld(c)).ToList();
+        List<Slider> sToRemove = sliders.Where(s => isTooOld(s)).ToList();
+        foreach (Click c in cToRemove)
+        {
+            Spawner.Instance.deleteClick(c.GetHashCode());
+        }
+        foreach (Slider s in sToRemove)
+        {
+            Spawner.Instance.deleteSlider(s.GetHashCode());
+        }
         clicks = clicks.Where(c => !isTooOld(c)).ToList();
         sliders = sliders.Where(s => !isTooOld(s)).ToList();
+        foreach (Click c in visibleClicks())
+        {
+            Spawner.Instance.spawnClick(toUnityCoords(new Vector2(c.x, c.y)), c.GetHashCode());
+        }
+        foreach (Slider s in visibleSliders())
+        {
+            // sliders 2 pos in future
+            Spawner.Instance.spawnSlider(toUnityCoords(new Vector2(s.x1, s.y1)), s.GetHashCode());
+        }
     }
 
-    void handleClick(Vector2 pos)
+    public void handleClick(Vector2 pos)
     {
-        // todo sliders
-        foreach (Click c in clicks)
+        List<Click> visi = visibleClicks();
+
+        foreach (Click c in visi)
         {
             float dsq = Vector2.SqrMagnitude(new Vector2(c.x, c.y) - pos);
-            if (dsq <= radius * radius && Mathf.Abs(Time.time / 1000f - c.time) <= 2 * tolerance)
+            if (dsq <= (radius * radius))
             {
-                // todo notify success of c
-            } 
+                Spawner.Instance.deleteClick(c.GetHashCode());
+                this.clicks.Remove(c);
+            }
             else
             {
-                // todo notify fail of c
+                Debug.Log("failed");
             }
-            Spawner.Instance.deleteClick(c.GetHashCode());
-            break;
+            // Spawner.Instance.deleteClick(c.GetHashCode());
         }
+
     }
 
     bool isVisible(Click c)
     {
-        return Time.time / 1000f >= c.time - approach && Time.time / 1000f <= c.time + tolerance;
+        return Time.time >= c.time - approach && Time.time <= c.time + tolerance;
     }
 
     bool isVisible(Slider s)
     {
-        return Time.time / 1000f >= s.startTime - approach && Time.time / 1000f <= s.endTime + tolerance;
+        return Time.time >= s.startTime - approach && Time.time <= s.endTime + tolerance;
     }
 
     bool isTooOld(Click c)
     {
-        return Time.time / 1000f > c.time + tolerance;
+        return Time.time > c.time + tolerance;
     }
 
     bool isTooOld(Slider s)
     {
-        return Time.time / 1000f > s.endTime + tolerance;
+        return Time.time > s.endTime + tolerance;
     }
 
     List<Click> visibleClicks()
@@ -90,7 +130,7 @@ public class Map : MonoBehaviour
 
     Vector2 toBeatmapCoords(Vector2 pos)
     {
-        
+
         float x = pos.x * 16f / SCREEN_WIDTH + 8f;
         float y = pos.y * 9f / SCREEN_HEIGHT + 4.5f;
         return new Vector2(x, y);
