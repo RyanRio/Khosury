@@ -24,7 +24,7 @@ public class onEnable : MonoBehaviour
     {
         Debug.Log("setting speed of mult");
         Debug.Log("prev mult: " + anim.GetFloat("mult"));
-        anim.SetFloat("mult", speed);
+        anim.SetFloat("mult", 1.0f / Map.Instance.approach);
 
         Debug.Log("new mult: " + anim.GetFloat("mult"));
     }

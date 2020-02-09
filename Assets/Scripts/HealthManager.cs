@@ -61,9 +61,6 @@ public class HealthManager : MonoBehaviour
             cb();
         }
 
-
-
-
     }
 
     public delegate void Callback();
@@ -77,6 +74,6 @@ public class HealthManager : MonoBehaviour
 
     public void score(int score)
     {
-        curHealth += score;
+        curHealth = Mathf.Min(maxHealth, curHealth + score);
     }
 }

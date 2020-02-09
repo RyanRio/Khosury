@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using System.Linq;
 using UnityEngine.SceneManagement;
+using System;
 
 public class Map : MonoBehaviour
 {
@@ -11,8 +12,8 @@ public class Map : MonoBehaviour
     List<Slider> sliders;
     public string beatmapPath;
     public BeatmapReader reader;
-    float radius;
-    float approach;
+    public float radius;
+    public float approach;
     float drain;
     float tolerance;
 
@@ -52,7 +53,7 @@ public class Map : MonoBehaviour
         HITSOUND = Resources.Load<AudioClip>("Songs/hit");
 
         Spawner.Instance.init(radius, approach);
-        // HealthManager.Instance.notifyDead(die);
+        HealthManager.Instance.notifyDead(die);
     }
 
     // Update is called once per frame
@@ -66,7 +67,7 @@ public class Map : MonoBehaviour
         }
         foreach (Slider s in sToRemove)
         {
-            Spawner.Instance.deleteSlider(s.GetHashCode());
+            SliderManager.Instance.deleteSilder(s.GetHashCode());
         }
         clicks = clicks.Where(c => !isTooOld(c)).ToList();
         sliders = sliders.Where(s => !isTooOld(s)).ToList();
@@ -77,7 +78,12 @@ public class Map : MonoBehaviour
         foreach (Slider s in visibleSliders())
         {
             // sliders 2 pos in future
-            Spawner.Instance.spawnSlider(toUnityCoords(new Vector2(s.x1, s.y1)), s.GetHashCode());
+            SliderManager.Instance.spawn(s);
+
+            if(s.startTime <= Time.time)
+            {
+                SliderManager.Instance.moveSlider(s.GetHashCode(), new Vector2(s.x2, s.y2), s.endTime);
+            }
         }
         
     }
@@ -86,6 +92,31 @@ public class Map : MonoBehaviour
     {
         print("oof i died");
         SceneManager.LoadScene("OOF_I_DIED");
+    }
+
+    public void handleDrag(Vector2 pos)
+    {
+        List<Slider> visiSliders = visibleSliders();
+
+        foreach (Slider s in visiSliders)
+        {
+            // calculate where the slider is based on how much time has passed and how far it has to go
+            float curTime = Time.time;
+            float startTime = s.startTime;
+            float endTime = s.endTime;
+
+            float progressInTime = (curTime - startTime) / (endTime - startTime);
+
+            Vector2 progress = Vector2.Lerp(new Vector2(s.x1, s.y1), new Vector2(s.x2, s.y2), progressInTime);
+
+            float dsq = Vector2.SqrMagnitude(progress - pos);
+
+            if (dsq <= (radius * radius))
+            {
+                scoreboardScript.Instance.updateScore(100);
+                HealthManager.Instance.score(100);
+            }
+        }
     }
 
     public void handleClick(Vector2 pos)
