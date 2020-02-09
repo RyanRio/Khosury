@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
+// manages sliders and their movement
 public class SliderManager : MonoBehaviour
 {
     Dictionary<int, SliderBoth> sliders;
