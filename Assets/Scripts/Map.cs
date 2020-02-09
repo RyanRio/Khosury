@@ -121,7 +121,6 @@ public class Map : MonoBehaviour
 
     public void handleClick(Vector2 pos)
     {
-        Debug.Log("click time: " + Time.time);
 
         List<Click> visi = visibleClicks();
 
@@ -137,7 +136,6 @@ public class Map : MonoBehaviour
             }
             else
             {
-                Debug.Log("failed");
             }
             break;
             // Spawner.Instance.deleteClick(c.GetHashCode());
