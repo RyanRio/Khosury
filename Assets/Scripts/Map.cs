@@ -17,6 +17,7 @@ public class Map : MonoBehaviour
 
     float SCREEN_HEIGHT;
     float SCREEN_WIDTH;
+    AudioClip HITSOUND;
 
     private static Map _instance;
     public static Map Instance { get { return _instance; } }
@@ -44,9 +45,10 @@ public class Map : MonoBehaviour
         radius = reader.getRadius();
         approach = reader.getApproach();
         drain = reader.getDrain();
-        tolerance = 0.005f * approach;
+        tolerance = 0.1f * approach;
         SCREEN_HEIGHT = Camera.main.orthographicSize * 2;
         SCREEN_WIDTH = SCREEN_HEIGHT * Screen.width / Screen.height;
+        HITSOUND = Resources.Load<AudioClip>("Songs/hit");
 
         Spawner.Instance.init(radius, approach);
     }
@@ -79,6 +81,8 @@ public class Map : MonoBehaviour
 
     public void handleClick(Vector2 pos)
     {
+        Debug.Log("click time: " + Time.time);
+
         List<Click> visi = visibleClicks();
 
         foreach (Click c in visi)
@@ -88,11 +92,13 @@ public class Map : MonoBehaviour
             {
                 Spawner.Instance.deleteClick(c.GetHashCode());
                 this.clicks.Remove(c);
+                SoundManager.instance.PlaySfx(HITSOUND);
             }
             else
             {
                 Debug.Log("failed");
             }
+            break;
             // Spawner.Instance.deleteClick(c.GetHashCode());
         }
 
